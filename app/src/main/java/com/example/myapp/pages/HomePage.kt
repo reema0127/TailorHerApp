@@ -211,7 +211,6 @@ fun SaleItems() {
         SaleItem(imageRes = R.drawable.dress2, discount = "Sale 15%", price = "LKR 8200")
     }
 }
-
 @Composable
 fun SaleItem(imageRes: Int, discount: String, price: String) {
     Column(
@@ -291,23 +290,23 @@ fun NewDropSection() {
             // Section Title
             Text(
                 text = "NEW DROP",
-                fontSize = 30.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = ivory,
-                color = Color.Black,
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
-            Text(
-                text = "IVORY DREAM",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = ivory,
                 color = Color.Black,
                 modifier = Modifier
+               .padding(start = 8.dp)
+//                    .align(Alignment.CenterHorizontally)
+            )
+            Text(
+                text = "IVORY DREAM",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = ivory,
+                color = Color.Black,
+                modifier = Modifier
                     .padding(start = 8.dp, bottom = 16.dp)
-                    .align(Alignment.CenterHorizontally)
+
             )
 
             // LazyRow displaying items
