@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.myapp.pages.DetailScreen
 import com.example.myapp.pages.HomePage
 import com.example.myapp.pages.LoginPage
 import com.example.myapp.pages.SignUpPage
@@ -23,6 +24,12 @@ fun MyAppNavigation(modifier: Modifier = Modifier,autheticationViewModel: Authet
         }
         composable("home"){
             HomePage(modifier,navController,autheticationViewModel)
+        }
+        composable("detail/{itemId}") { backStackEntry ->
+            val itemId = backStackEntry.arguments?.getString("itemId")
+            itemId?.let {
+                DetailScreen(modifier, itemId, navController)
+            }
         }
     })
 }

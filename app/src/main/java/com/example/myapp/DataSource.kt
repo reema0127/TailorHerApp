@@ -5,7 +5,7 @@ import com.example.myapp.DataClases.NewDrop
 import com.example.myapp.DataClases.Product
 
 class DataSource {
-    fun loadNewDrops(): List<NewDrop> {
+    fun loadIvoryDrops(): List<NewDrop> {
         return listOf(
             NewDrop(R.drawable.white_1, R.string.frosted_charm, R.string.price_4500),
             NewDrop(R.drawable.white_2, R.string.moonlit_gown, R.string.price_6500),

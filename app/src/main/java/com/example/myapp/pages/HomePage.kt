@@ -2,6 +2,7 @@ package com.example.myapp.pages
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -31,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.example.myapp.AuthState
 import com.example.myapp.AutheticationViewModel
@@ -123,7 +125,7 @@ fun FashionStoreUI() {
         TopBar()
         SaleItems()
         Spacer(modifier = Modifier.height(15.dp))
-        NewDropSection()
+        IvoryDropSection() // Newly added section
         ProductScreen()
         Spacer(modifier = Modifier.height(60.dp))
     }
@@ -265,23 +267,14 @@ fun SaleItem(imageRes: Int, discount: String, price: String) {
     }
 }
 @Composable
-fun NewDropSection() {
+fun IvoryDropSection() {
+    var selectedIvoryDrop by remember { mutableStateOf<NewDrop?>(null) } // Track selected item
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(0.dp)
     ) {
-//        // Background image for the section
-//        Image(
-//            painter = painterResource(id = R.drawable.ivory_bg), // Replace with your image resource
-//            contentDescription = null,
-//            contentScale = ContentScale.Crop,
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .height(380.dp)
-//        )
-
-        // Content layered on top of the background
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -289,60 +282,60 @@ fun NewDropSection() {
         ) {
             // Section Title
             Text(
-                text = "NEW DROP",
-                fontSize = 24.sp,
+                text = "IVORY DROP",
+                fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = ivory,
                 color = Color.Black,
-                modifier = Modifier
-               .padding(start = 8.dp)
-//                    .align(Alignment.CenterHorizontally)
+                modifier = Modifier.padding(start = 30.dp, bottom = 5.dp)
             )
             Text(
-                text = "IVORY DREAM",
-                fontSize = 20.sp,
+                text = "TIMELESS BEAUTY",
+                fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = ivory,
                 color = Color.Black,
-                modifier = Modifier
-                    .padding(start = 8.dp, bottom = 16.dp)
-
+                modifier = Modifier.padding(start = 30.dp, bottom = 16.dp)
             )
 
-            // LazyRow displaying items
-            LazyRow(modifier = Modifier
-                .padding(horizontal = 0.dp, vertical = 8.dp)
-                )
-            {
-                val newDrops = DataSource().loadNewDrops()
-                items(newDrops) { newDrop ->
-                    NewDropCard(newDrop = newDrop)
+            // LazyRow displaying Ivory Drop items
+            LazyRow(
+                modifier = Modifier.padding(horizontal = 0.dp, vertical = 8.dp)
+            ) {
+                val ivoryDrops = DataSource().loadIvoryDrops()
+                items(ivoryDrops) { ivoryDrop ->
+                    IvoryDropCard(
+                        ivoryDrop = ivoryDrop,
+                        onCardClick = { selectedIvoryDrop = it } // Handle click
+                    )
                 }
             }
         }
     }
+
+
 }
 
 
 @Composable
-fun NewDropCard(newDrop: NewDrop, modifier: Modifier = Modifier) {
+fun NewDropCard(newDrop: NewDrop, navController: NavController, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .width(160.dp)
-            .padding(horizontal = 4.dp),
+            .padding(horizontal = 4.dp)
+            .clickable {
+                navController.navigate("detail/${newDrop.id}")
+            },
         shape = RectangleShape
-
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color(0xFFFFF8F0))
-
-        ) {
-            // Image
+        ) {// Image
             Image(
-                painter = painterResource(newDrop.imageResourceId),
-                contentDescription = stringResource(newDrop.titleResourceId),
+                painter = painterResource(ivoryDrop.imageResourceId),
+                contentDescription = stringResource(ivoryDrop.titleResourceId),
                 modifier = Modifier
                     .fillMaxWidth()
                     .width(150.dp)
@@ -350,14 +343,14 @@ fun NewDropCard(newDrop: NewDrop, modifier: Modifier = Modifier) {
             )
             // Title
             Text(
-                text = stringResource(newDrop.titleResourceId),
+                text = stringResource(ivoryDrop.titleResourceId),
                 fontSize = 16.sp,
                 color = Color.Black,
                 modifier = Modifier.padding(start = 8.dp, top = 4.dp)
             )
             // Price
             Text(
-                text = stringResource(newDrop.priceResourceId),
+                text = stringResource(ivoryDrop.priceResourceId),
                 fontSize = 14.sp,
                 color = Color.Black,
                 modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
@@ -365,17 +358,6 @@ fun NewDropCard(newDrop: NewDrop, modifier: Modifier = Modifier) {
         }
     }
 }
-
-
-//@Composable
-//fun NewDropLazyRowApp() {
-//    val newDrops = DataSource().loadNewDrops()
-//    LazyRow(modifier = Modifier.padding(16.dp)) {
-//        items(newDrops) { newDrop ->
-//            NewDropCard(newDrop = newDrop)
-//        }
-//    }
-//}
 
 @Composable
 fun ProductScreen() {

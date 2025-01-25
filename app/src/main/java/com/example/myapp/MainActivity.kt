@@ -12,8 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.myapp.ui.theme.MyAppTheme
-import com.example.myapp.ui.theme.ThemeProvider
-import com.example.myapp.ui.theme.LocalTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,8 +23,6 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
-            // Pass `isDarkMode` state to ThemeProvider
-            ThemeProvider(isDarkMode = true) {  // You can toggle this value
                 MyAppTheme {
                     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                         MyAppNavigation(
@@ -34,7 +31,6 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 }
-            }
         }
     }
 }
