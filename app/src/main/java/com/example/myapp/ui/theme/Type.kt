@@ -41,3 +41,7 @@ val playfairdisplayFamily = FontFamily(
 val ivory = FontFamily(
     Font(R.font.ivory)
 )
+
+val instrumentsans = FontFamily(
+    Font(R.font.instrumentsans)
+)

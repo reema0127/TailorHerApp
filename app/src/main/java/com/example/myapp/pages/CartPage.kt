@@ -2,6 +2,7 @@ package com.example.myapp.pages
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -87,10 +88,15 @@ fun CartPageUI(modifier: Modifier = Modifier) {
 fun TopBarCart() {
     var searchText by remember { mutableStateOf("") }
 
+    val isDarkTheme = isSystemInDarkTheme()
+    val backgroundColor = MaterialTheme.colorScheme.primaryContainer
+    val textColor = MaterialTheme.colorScheme.onPrimaryContainer
+    val logoRes = if (isSystemInDarkTheme()) R.drawable.logodark else R.drawable.logolight
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFFF8C9D5))
+            .background(backgroundColor)
             .padding(horizontal = 8.dp, vertical = 10.dp)
     ) {
         Row(
@@ -100,19 +106,24 @@ fun TopBarCart() {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Logo Image
             Image(
-                painter = painterResource(id = R.drawable.logo),
+                painter = painterResource(id = logoRes),
                 contentDescription = "Logo",
-                modifier = Modifier.height(46.dp)
+                modifier = Modifier
+                    .height(46.dp)
             )
+
+            // Notification Icon
             Icon(
                 imageVector = Icons.Default.Notifications,
                 contentDescription = "Notification Icon",
-                tint = Color.Black,
+                tint = textColor,
                 modifier = Modifier.size(24.dp)
             )
         }
 
+        // Search Bar with Icon
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -120,6 +131,7 @@ fun TopBarCart() {
                 .padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Search Icon
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = "Search Icon",
@@ -128,17 +140,19 @@ fun TopBarCart() {
                     .size(24.dp)
                     .padding(end = 8.dp)
             )
+
+            // Text Field
             BasicTextField(
                 value = searchText,
                 onValueChange = { searchText = it },
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .width(300.dp),
                 textStyle = TextStyle(fontSize = 16.sp, color = Color.Black),
                 singleLine = true
             )
         }
     }
 }
-
 @Composable
 fun CartItems(
     items: List<CartItems>,
@@ -179,7 +193,7 @@ fun CartItemCard(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White, RoundedCornerShape(12.dp))
+            .background( MaterialTheme.colorScheme.tertiary, RoundedCornerShape(12.dp))
             .padding(12.dp)
     ) {
         Row(verticalAlignment = Alignment.Top,
@@ -211,17 +225,17 @@ fun CartItemCard(
             ) {
                 // Top section with text
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(text = item.title, fontSize = 14.sp, color = Color.Black)
-                    Text(text = item.description, fontSize = 12.sp, color = Color.Gray)
+                    Text(text = item.title, fontSize = 14.sp,     color = (MaterialTheme.colorScheme.onPrimaryContainer))
+                    Text(text = item.description, fontSize = 12.sp,     color = (MaterialTheme.colorScheme.onPrimaryContainer))
                     Button(
                         onClick = { /* Handle size selection */ },
                         modifier = Modifier.padding(top = 4.dp),
                         contentPadding = PaddingValues(horizontal = 16.dp),
-                        colors = ButtonDefaults.buttonColors(Color(0xFFF8C9D5)) // Optional: style button color
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
                     ) {
-                        Text(text = item.size, fontSize = 12.sp, color = Color.Black)
+                        Text(text = item.size, fontSize = 12.sp,color = (MaterialTheme.colorScheme.onPrimary))
                     }
-                    Text(text = "LKR ${String.format("%,d", totalPrice)}", fontSize = 14.sp, color = Color.Black)
+                    Text(text = "LKR ${String.format("%,d", totalPrice)}", fontSize = 14.sp, color = (MaterialTheme.colorScheme.onPrimary))
                 }
 
                 // Bottom section with quantity buttons
@@ -234,18 +248,20 @@ fun CartItemCard(
                         onClick = { if (quantity > 1) quantity-- },
                         modifier = Modifier.size(36.dp)
                     ) {
-                        Text(text = "-", fontSize = 24.sp, color = Color.Black)
+                        Text(text = "-", fontSize = 24.sp, color = (MaterialTheme.colorScheme.onPrimary))
                     }
                     Text(
                         text = "$quantity",
                         fontSize = 16.sp,
+                        color = (MaterialTheme.colorScheme.onPrimary),
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
                     TextButton(
                         onClick = { quantity++ },
+
                         modifier = Modifier.size(36.dp)
                     ) {
-                        Text(text = "+", fontSize = 24.sp, color = Color.Black)
+                        Text(text = "+", fontSize = 24.sp, color = (MaterialTheme.colorScheme.onPrimary))
                     }
                 }
             }
@@ -268,7 +284,7 @@ fun CartFooter(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFFE9C5C8))
+            .background(MaterialTheme.colorScheme.secondary)
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -279,19 +295,20 @@ fun CartFooter(
                 onCheckedChange = { onSelectAll(it) },
                 modifier = Modifier.padding(end = 8.dp)
             )
-            Text(text = "All", fontSize = 16.sp, color = Color.Black)
+            Text(text = "All", fontSize = 16.sp,  color = (MaterialTheme.colorScheme.onPrimary))
         }
-        Text(text = "LKR ${String.format("%,d", totalPrice)}", fontSize = 16.sp, color = Color.Black)
-        TextButton(
-            onClick = onCheckout,
-            modifier = Modifier
-                .background(Color(0xFFF8C9D5), RoundedCornerShape(16.dp))
-                .padding(horizontal = 16.dp, vertical = 2.dp)
+        Text(text = "LKR ${String.format("%,d", totalPrice)}", fontSize = 16.sp,  color = (MaterialTheme.colorScheme.onPrimary))
+
+        Button(
+            onClick = { /* Handle size selection */ },
+            modifier = Modifier.padding(top = 4.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
         ) {
             Text(
                 text = "Checkout (${selectedItems.size})",
                 fontSize = 16.sp,
-                color = Color.Black
+                color = (MaterialTheme.colorScheme.onPrimary)
             )
         }
     }

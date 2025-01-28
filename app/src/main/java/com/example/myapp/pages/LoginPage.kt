@@ -98,7 +98,7 @@ fun LoginPage(modifier: Modifier = Modifier, navController: NavController, authe
                     Text(
                         text = "Welcome Back!",
                         fontFamily = playfairdisplayFamily,
-                        fontSize = 40.sp,
+                        fontSize = 35.sp,
                         color = Color.White,
                         modifier = Modifier.padding(bottom = 40.dp)
                     )

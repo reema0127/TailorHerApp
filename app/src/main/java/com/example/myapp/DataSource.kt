@@ -7,13 +7,50 @@ import com.example.myapp.DataClases.Product
 class DataSource {
     fun loadIvoryDrops(): List<NewDrop> {
         return listOf(
-            NewDrop(R.drawable.white_1, R.string.frosted_charm, R.string.price_4500),
-            NewDrop(R.drawable.white_2, R.string.moonlit_gown, R.string.price_6500),
-            NewDrop(R.drawable.white_3, R.string.luna_glow, R.string.price_4000),
-            NewDrop(R.drawable.white_4, R.string.moonlit_gown, R.string.price_6500),
-            NewDrop(R.drawable.white_5, R.string.luna_glow, R.string.price_4000)
+            NewDrop(
+                id = "1",
+                imageResourceId = R.drawable.white_1,
+                titleResourceId = R.string.frosted_charm,
+                priceResourceId = R.string.price_4500,
+                description = "A beautiful frosted charm dress with intricate lace details.",
+                stockLevel = "10 remaining"
+            ),
+            NewDrop(
+                id = "2",
+                imageResourceId = R.drawable.white_2,
+                titleResourceId = R.string.moonlit_gown,
+                priceResourceId = R.string.price_6500,
+                description = "A stunning moonlit gown with a delicate silk fabric.",
+                stockLevel = "100"
+            ),
+            NewDrop(
+                id = "3",
+                imageResourceId = R.drawable.white_3,
+                titleResourceId = R.string.luna_glow,
+                priceResourceId = R.string.price_4000,
+                description = "A glowing luna dress perfect for evening parties.",
+                stockLevel = "25"
+            ),
+            NewDrop(
+                id = "4",
+                imageResourceId = R.drawable.white_4,
+                titleResourceId = R.string.moonlit_gown,
+                priceResourceId = R.string.price_6500,
+                description = "A beautiful moonlit gown with a flowing train.",
+                stockLevel = "Almost Out of stock"
+            ),
+            NewDrop(
+                id = "5",
+                imageResourceId = R.drawable.white_5,
+                titleResourceId = R.string.luna_glow,
+                priceResourceId = R.string.price_4000,
+                description = "A chic and elegant luna glow dress with a delicate back design.",
+                stockLevel = "100"
+            )
         )
     }
+
+
 
     fun loadProduct(): List<Product> {
         return listOf(

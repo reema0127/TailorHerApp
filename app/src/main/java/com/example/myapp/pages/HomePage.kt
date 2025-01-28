@@ -3,6 +3,7 @@ package com.example.myapp.pages
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -34,6 +35,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
+import com.example.compose.primaryDark
+import com.example.compose.primaryLight
 import com.example.myapp.AuthState
 import com.example.myapp.AutheticationViewModel
 import com.example.myapp.DataSource
@@ -41,6 +44,7 @@ import com.example.myapp.DataClases.NavItem
 import com.example.myapp.DataClases.NewDrop
 import com.example.myapp.DataClases.Product
 import com.example.myapp.R
+import com.example.myapp.ui.theme.instrumentsans
 import com.example.myapp.ui.theme.ivory
 
 @Composable
@@ -64,13 +68,15 @@ fun HomePage(
         NavItem("Account", Icons.Default.AccountCircle, 0)
     )
 
-    var selectedIndex by remember { mutableIntStateOf(0) }
-    val customPink = Color(0xFFF8C9D5)
+    var selectedIndex by remember { mutableStateOf(0) }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
         bottomBar = {
-            NavigationBar(containerColor = customPink) {
+            val backgroundColor = MaterialTheme.colorScheme.primaryContainer
+            val contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+
+            NavigationBar(containerColor = backgroundColor) {
                 navItemList.forEachIndexed { index, navItem ->
                     NavigationBarItem(
                         selected = selectedIndex == index,
@@ -78,18 +84,30 @@ fun HomePage(
                         icon = {
                             BadgedBox(badge = {
                                 if (navItem.badgeCount > 0) {
-                                    Badge {
+                                    Badge(
+                                        containerColor = contentColor,
+                                        contentColor = backgroundColor
+                                    ) {
                                         Text(text = navItem.badgeCount.toString())
                                     }
                                 }
                             }) {
                                 Icon(
                                     imageVector = navItem.icon,
-                                    contentDescription = "${navItem.label} Icon"
+                                    contentDescription = "${navItem.label} Icon",
+                                    tint = contentColor
                                 )
                             }
                         },
-                        label = { Text(text = navItem.label) }
+                        label = {
+                            Text(text = navItem.label, color = contentColor)
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = contentColor,
+                            selectedTextColor = contentColor,
+                            unselectedIconColor = contentColor.copy(alpha = 0.7f),
+                            unselectedTextColor = contentColor.copy(alpha = 0.7f),
+                        )
                     )
                 }
             }
@@ -97,35 +115,39 @@ fun HomePage(
     ) { innerPadding ->
         ContentScreen(
             modifier = Modifier.padding(innerPadding),
-            selectedIndex = selectedIndex
+            selectedIndex = selectedIndex,
+            navController = navController
         )
     }
 }
 
+
 @Composable
 fun ContentScreen(
     modifier: Modifier = Modifier,
-    selectedIndex: Int
+    selectedIndex: Int,
+    navController: NavController
 ) {
     when (selectedIndex) {
-        0 -> FashionStoreUI()
+        0 -> FashionStoreUI(navController)
         1 -> CartPageUI()
         2 -> UserDashboard()
     }
 }
 
+
 @Composable
-fun FashionStoreUI() {
+fun FashionStoreUI(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .background(Color(0xFFFFF8F0))
+            .background(MaterialTheme.colorScheme.primary)
     ) {
         TopBar()
         SaleItems()
         Spacer(modifier = Modifier.height(15.dp))
-        IvoryDropSection() // Newly added section
+        IvoryDropSection(navController)
         ProductScreen()
         Spacer(modifier = Modifier.height(60.dp))
     }
@@ -135,10 +157,15 @@ fun FashionStoreUI() {
 fun TopBar() {
     var searchText by remember { mutableStateOf("") }
 
+    val isDarkTheme = isSystemInDarkTheme()
+    val backgroundColor = MaterialTheme.colorScheme.primaryContainer
+    val textColor = MaterialTheme.colorScheme.onPrimaryContainer
+    val logoRes = if (isSystemInDarkTheme()) R.drawable.logodark else R.drawable.logolight
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFFF8C9D5))
+            .background(backgroundColor)
             .padding(horizontal = 8.dp, vertical = 10.dp)
     ) {
         Row(
@@ -150,7 +177,7 @@ fun TopBar() {
         ) {
             // Logo Image
             Image(
-                painter = painterResource(id = R.drawable.logo),
+                painter = painterResource(id = logoRes),
                 contentDescription = "Logo",
                 modifier = Modifier
                     .height(46.dp)
@@ -160,7 +187,7 @@ fun TopBar() {
             Icon(
                 imageVector = Icons.Default.Notifications,
                 contentDescription = "Notification Icon",
-                tint = Color.Black,
+                tint = textColor,
                 modifier = Modifier.size(24.dp)
             )
         }
@@ -196,10 +223,6 @@ fun TopBar() {
     }
 }
 
-
-
-
-
 @Composable
 fun SaleItems() {
     Row(
@@ -213,21 +236,23 @@ fun SaleItems() {
         SaleItem(imageRes = R.drawable.dress2, discount = "Sale 15%", price = "LKR 8200")
     }
 }
+
 @Composable
 fun SaleItem(imageRes: Int, discount: String, price: String) {
     Column(
         modifier = Modifier
             .width(160.dp)
             .height(350.dp)
-            .background(Color(0xFFF8C9D5)),
+            .background(MaterialTheme.colorScheme.primaryContainer),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = discount,
             modifier = Modifier.padding(top = 8.dp),
+            fontFamily = instrumentsans,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black
+            color = (MaterialTheme.colorScheme.onPrimaryContainer),
         )
 
         Box(
@@ -249,14 +274,15 @@ fun SaleItem(imageRes: Int, discount: String, price: String) {
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .wrapContentWidth()
-                    .background(Color(0xFFF8C9D5), RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(8.dp))
                     .padding(horizontal = 8.dp, vertical = 4.dp)
 
 
             ) {
                 Text(
                     text = price,
-                    color = Color.DarkGray,
+                    color = (MaterialTheme.colorScheme.onPrimaryContainer),
+                    fontFamily = instrumentsans,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.align(Alignment.Center),
@@ -266,9 +292,11 @@ fun SaleItem(imageRes: Int, discount: String, price: String) {
         }
     }
 }
+
+
 @Composable
-fun IvoryDropSection() {
-    var selectedIvoryDrop by remember { mutableStateOf<NewDrop?>(null) } // Track selected item
+fun IvoryDropSection(navController: NavController) {
+    var selectedIvoryDrop by remember { mutableStateOf<NewDrop?>(null) }
 
     Box(
         modifier = Modifier
@@ -282,19 +310,20 @@ fun IvoryDropSection() {
         ) {
             // Section Title
             Text(
-                text = "IVORY DROP",
+                text = "NEW DROP",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = ivory,
-                color = Color.Black,
+                color = (MaterialTheme.colorScheme.onPrimary),
                 modifier = Modifier.padding(start = 30.dp, bottom = 5.dp)
             )
             Text(
-                text = "TIMELESS BEAUTY",
+                text = "IVORY DROP",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = ivory,
-                color = Color.Black,
+
+                color = (MaterialTheme.colorScheme.onPrimary),
                 modifier = Modifier.padding(start = 30.dp, bottom = 16.dp)
             )
 
@@ -306,33 +335,32 @@ fun IvoryDropSection() {
                 items(ivoryDrops) { ivoryDrop ->
                     IvoryDropCard(
                         ivoryDrop = ivoryDrop,
-                        onCardClick = { selectedIvoryDrop = it } // Handle click
+                        navController = navController // Pass the NavController
                     )
                 }
             }
         }
     }
-
-
 }
 
-
 @Composable
-fun NewDropCard(newDrop: NewDrop, navController: NavController, modifier: Modifier = Modifier) {
+fun IvoryDropCard(ivoryDrop: NewDrop, navController: NavController, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .width(160.dp)
             .padding(horizontal = 4.dp)
             .clickable {
-                navController.navigate("detail/${newDrop.id}")
+                // Pass the entire NewDrop object to the DetailScreen
+                navController.navigate("detail/${ivoryDrop.id}")
             },
-        shape = RectangleShape
+        shape = RoundedCornerShape(8.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFFFFF8F0))
-        ) {// Image
+                .background(MaterialTheme.colorScheme.primary)
+        ) {
+            // Image
             Image(
                 painter = painterResource(ivoryDrop.imageResourceId),
                 contentDescription = stringResource(ivoryDrop.titleResourceId),
@@ -345,19 +373,20 @@ fun NewDropCard(newDrop: NewDrop, navController: NavController, modifier: Modifi
             Text(
                 text = stringResource(ivoryDrop.titleResourceId),
                 fontSize = 16.sp,
-                color = Color.Black,
+                color = (MaterialTheme.colorScheme.onPrimary),
                 modifier = Modifier.padding(start = 8.dp, top = 4.dp)
             )
             // Price
             Text(
                 text = stringResource(ivoryDrop.priceResourceId),
                 fontSize = 14.sp,
-                color = Color.Black,
+                color = (MaterialTheme.colorScheme.onPrimary),
                 modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
             )
         }
     }
 }
+
 
 @Composable
 fun ProductScreen() {
@@ -393,7 +422,7 @@ fun ProductCard(imageRes: Int, name: String, price: String) {
     Column(
         modifier = Modifier
             .width(160.dp)
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.primary)
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -413,7 +442,7 @@ fun ProductCard(imageRes: Int, name: String, price: String) {
             text = name,
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black,
+            color = (MaterialTheme.colorScheme.onPrimary),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -422,7 +451,7 @@ fun ProductCard(imageRes: Int, name: String, price: String) {
         Text(
             text = price,
             fontSize = 14.sp,
-            color = Color.Gray
+            color = (MaterialTheme.colorScheme.onPrimary),
         )
     }
 }

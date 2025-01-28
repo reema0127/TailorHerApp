@@ -10,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -26,6 +27,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -56,7 +58,7 @@ fun UserDashboard(modifier: Modifier = Modifier) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF9F3F4))
+            .background(MaterialTheme.colorScheme.primary)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             ProfileHeader(onSettingsClick = { isSettingsVisible = true })
@@ -160,12 +162,12 @@ fun ProfileHeader(onSettingsClick: () -> Unit) {
                 imageVector = Icons.Default.AccountCircle,
                 contentDescription = "Profile Icon",
                 modifier = Modifier.size(40.dp),
-                tint = Color(0xFF9E7D85)
+                tint = MaterialTheme.colorScheme.onPrimary
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "Username",
-                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium, color = Color(0xFF9E7D85))
+                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium,  color = (MaterialTheme.colorScheme.onPrimary))
             )
         }
 
@@ -175,7 +177,7 @@ fun ProfileHeader(onSettingsClick: () -> Unit) {
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = "Settings Icon",
-                    tint = Color(0xFF9E7D85),
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -183,92 +185,31 @@ fun ProfileHeader(onSettingsClick: () -> Unit) {
             Icon(
                 imageVector = Icons.Default.Notifications,
                 contentDescription = "Notifications Icon",
-                tint = Color(0xFF9E7D85),
+                tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.size(24.dp)
             )
         }
     }
 }
 
-//@Composable
-//fun SettingsOverlay(onDismiss: () -> Unit) {
-//    Dialog(onDismissRequest = onDismiss) {
-//        Column(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .background(Color(0xFFF9F3F4), RoundedCornerShape(8.dp))
-//                .padding(16.dp)
-//        ) {
-//            Text(
-//                text = "Settings",
-//                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color(0xFF9E7D85)),
-//                modifier = Modifier.padding(bottom = 16.dp)
-//            )
-//            Row(
-//                modifier = Modifier.fillMaxWidth(),
-//                horizontalArrangement = Arrangement.SpaceBetween
-//            ) {
-//                Text(
-//                    text = "Currency",
-//                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color.Black)
-//                )
-//                Text(
-//                    text = "LKR",
-//                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color.Gray)
-//                )
-//            }
-//            Spacer(modifier = Modifier.height(16.dp))
-//            Row(
-//                modifier = Modifier.fillMaxWidth(),
-//                horizontalArrangement = Arrangement.SpaceBetween
-//            ) {
-//                Text(
-//                    text = "Shipping Address",
-//                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color.Black)
-//                )
-//                Icon(
-//                    imageVector = Icons.Default.KeyboardArrowRight,
-//                    contentDescription = "Arrow Icon",
-//                    tint = Color.Gray
-//                )
-//            }
-//            Spacer(modifier = Modifier.height(16.dp))
-//            Row(
-//                modifier = Modifier.fillMaxWidth(),
-//                horizontalArrangement = Arrangement.SpaceBetween
-//            ) {
-//                Text(
-//                    text = "Profile",
-//                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color.Black)
-//                )
-//                Icon(
-//                    imageVector = Icons.Default.KeyboardArrowRight,
-//                    contentDescription = "Arrow Icon",
-//                    tint = Color.Gray
-//                )
-//            }
-//            Spacer(modifier = Modifier.height(16.dp))
-//            Button(
-//                onClick = onDismiss,
-//                modifier = Modifier.fillMaxWidth(),
-//                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9E7D85))
-//            ) {
-//                Text(text = "Sign Out", color = Color.White)
-//            }
-//        }
-//    }
-//}
-//
+
 
 @Composable
 fun OrderStatusSection() {
+    val isDarkTheme = isSystemInDarkTheme()
+
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(start = 26.dp, end = 22.dp)
     ) {
         Text(
             text = "My Order",
-            style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color(0xFF9E7D85)),
+            style = TextStyle(
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onPrimary
+            ),
             modifier = Modifier.padding(vertical = 8.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -276,23 +217,30 @@ fun OrderStatusSection() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            ImageCard(imageRes = R.drawable.frame1)
-            ImageCard(imageRes = R.drawable.frame2)
-            ImageCard(imageRes = R.drawable.frame3)
-            ImageCard(imageRes = R.drawable.frame4)
+            ImageCard(imageRes = if (isDarkTheme) R.drawable.frame1dark else R.drawable.frame1)
+            ImageCard(imageRes = if (isDarkTheme) R.drawable.frame2dark else R.drawable.frame2)
+            ImageCard(imageRes = if (isDarkTheme) R.drawable.frame3dark else R.drawable.frame3)
+            ImageCard(imageRes = if (isDarkTheme) R.drawable.frame4dark else R.drawable.frame4)
         }
     }
 }
 
 @Composable
 fun PaymentSection() {
+    val isDarkTheme = isSystemInDarkTheme()
+
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(start = 32.dp)
     ) {
         Text(
             text = "Payments",
-            style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color(0xFF9E7D85)),
+            style = TextStyle(
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onPrimary
+            ),
             modifier = Modifier.padding(vertical = 8.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -300,20 +248,21 @@ fun PaymentSection() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            ImageCard(imageRes = R.drawable.frame5)
-            ImageCard(imageRes = R.drawable.frame6)
-            ImageCard(imageRes = R.drawable.frame7)
+            ImageCard(imageRes = if (isDarkTheme) R.drawable.frame5dark else R.drawable.frame5)
+            ImageCard(imageRes = if (isDarkTheme) R.drawable.frame6dark else R.drawable.frame6)
+            ImageCard(imageRes = if (isDarkTheme) R.drawable.frame7dark else R.drawable.frame7)
         }
     }
 }
+
 @Composable
 fun ImageCard(imageRes: Int) {
     Image(
         painter = painterResource(id = imageRes),
         contentDescription = null,
         modifier = Modifier
-            .size(80.dp)
-            .background(Color(0xFFF8DDE2), RoundedCornerShape(8.dp))
+            .size(85.dp)
+            .background(MaterialTheme.colorScheme.tertiaryContainer, RoundedCornerShape(5.dp))
     )
 }
 
@@ -334,7 +283,7 @@ fun MoreToLoveSection() {
         ) {
             Text(
                 text = "More to Love → ",
-                style = TextStyle(fontSize = 26.sp, fontWeight = FontWeight.Bold, color = Color(0xFF9E7D85)),
+                style = TextStyle(fontSize = 26.sp, fontWeight = FontWeight.Bold,color = (MaterialTheme.colorScheme.onPrimary)),
                 modifier = Modifier.weight(1f)
                     .padding(start = 120.dp)
             )
@@ -366,7 +315,7 @@ fun MoreToLoveSection() {
                         style = TextStyle(
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium,
-                            color = Color(0xFF9E7D85)
+                            color = (MaterialTheme.colorScheme.onPrimary)
                         ),
                         modifier = Modifier
                             .clickable {
@@ -381,30 +330,12 @@ fun MoreToLoveSection() {
 }
 
 @Composable
-fun ImageCard(imageRes: Int, navController: NavController) {
-
-    Image(
-        painter = painterResource(id = imageRes),
-        contentDescription = null,
-        modifier = Modifier
-            .size(80.dp)
-            .background(Color(0xFFF8DDE2), RoundedCornerShape(8.dp))
-            .clickable {
-                // Navigate to IndividualProductPage if the clicked image is skirt2
-                if (imageRes == R.drawable.skirt2) {
-                    navController.navigate("individualProduct")
-                }
-            }
-    )
-}
-
-@Composable
 fun ProductCardUser(imageRes: Int, title: String, price: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .width(160.dp)
-            .background(Color(0xFFF9F3F4), RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.primary)
             .padding(start = 16.dp)
     ) {
         Image(
@@ -418,12 +349,12 @@ fun ProductCardUser(imageRes: Int, title: String, price: String) {
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = title,
-            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Color.Black),
+            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = (MaterialTheme.colorScheme.onPrimary)),
             maxLines = 1
         )
         Text(
             text = price,
-            style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, color = Color.Gray)
+            style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium, color = (MaterialTheme.colorScheme.onPrimary))
         )
 
     }
