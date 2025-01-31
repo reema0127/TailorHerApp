@@ -63,6 +63,7 @@ fun CartPageUI(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .weight(1f) // Take the remaining space above the footer
                 .verticalScroll(rememberScrollState()) // Allow scrolling for items
+                .background(MaterialTheme.colorScheme.primary)
         ) {
             CartItems(
                 items = cartItems,

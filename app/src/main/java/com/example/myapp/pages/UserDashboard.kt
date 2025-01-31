@@ -16,12 +16,14 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -40,9 +42,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -54,13 +58,20 @@ import kotlinx.coroutines.launch
 @Composable
 fun UserDashboard(modifier: Modifier = Modifier) {
     var isSettingsVisible by remember { mutableStateOf(false) } // State for settings panel visibility
+    val scrollState = rememberScrollState() // Add scroll state
+
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState) // Make it scrollable
+                .padding(bottom = 16.dp) // Avoid clipping
+        ) {
             ProfileHeader(onSettingsClick = { isSettingsVisible = true })
             Spacer(modifier = Modifier.height(16.dp))
             OrderStatusSection()
@@ -68,8 +79,10 @@ fun UserDashboard(modifier: Modifier = Modifier) {
             PaymentSection()
             Spacer(modifier = Modifier.height(16.dp))
             MoreToLoveSection()
+            Spacer(modifier = Modifier.height(16.dp))
+            Product()
+            Spacer(modifier = Modifier.height(60.dp))
         }
-
         // Animated settings panel
         AnimatedVisibility(
             visible = isSettingsVisible,
@@ -96,11 +109,12 @@ fun UserDashboard(modifier: Modifier = Modifier) {
 
 @Composable
 fun SettingsPanel(modifier: Modifier = Modifier, onClose: () -> Unit) {
+
     Box(
         modifier = modifier
             .fillMaxHeight()
             .width(300.dp)
-            .background(Color(0xFFF9F3F4), RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
+            .background(MaterialTheme.colorScheme.tertiaryContainer)
             .padding(16.dp)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -111,37 +125,37 @@ fun SettingsPanel(modifier: Modifier = Modifier, onClose: () -> Unit) {
             ) {
                 Text(
                     text = "Settings",
-                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color(0xFF9E7D85))
+                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold, color = (MaterialTheme.colorScheme.onPrimary))
                 )
                 IconButton(onClick = onClose) {
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowRight,
                         contentDescription = "Close",
-                        tint = Color(0xFF9E7D85)
+                        tint = (MaterialTheme.colorScheme.onPrimary)
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text("Currency", style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium))
+            Text("Currency", style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium,color = (MaterialTheme.colorScheme.onPrimary)))
             Spacer(modifier = Modifier.height(8.dp))
-            Text("LKR", style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Light, color = Color.Gray))
+            Text("LKR", style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Light, color = (MaterialTheme.colorScheme.onPrimary)))
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text("Shipping Address", style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium))
+            Text("Shipping Address", style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium,color = (MaterialTheme.colorScheme.onPrimary)))
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text("Profile", style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium))
+            Text("Profile", style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium,color = (MaterialTheme.colorScheme.onPrimary)))
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = onClose,
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9E7D85))
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
             ) {
-                Text(text = "Sign Out", color = Color.White)
+                Text(text = "Sign Out", color = (MaterialTheme.colorScheme.onPrimary))
             }
         }
     }
@@ -173,6 +187,13 @@ fun ProfileHeader(onSettingsClick: () -> Unit) {
 
         // Right-side icons
         Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Search Icon",
+                tint = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
             IconButton(onClick = onSettingsClick) {
                 Icon(
                     imageVector = Icons.Default.Settings,
@@ -359,3 +380,73 @@ fun ProductCardUser(imageRes: Int, title: String, price: String) {
 
     }
 }
+
+
+@Composable
+fun Product() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        // Top section with products
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            ProductCarddashboard(
+                imageRes = R.drawable.top1,
+                name = "Beige Babydoll top",
+                price = "LKR 7500"
+            )
+            ProductCarddashboard(
+                imageRes = R.drawable.dress5,
+                name = "Floral Dress",
+                price = "LKR 8200"
+            )
+        }
+
+
+    }
+}
+
+@Composable
+fun ProductCarddashboard(imageRes: Int, name: String, price: String) {
+    Column(
+        modifier = Modifier
+            .width(160.dp)
+            .background(MaterialTheme.colorScheme.primary)
+            .padding(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // Image
+        Image(
+            painter = painterResource(id = imageRes),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Product name
+        Text(
+            text = name,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            color = (MaterialTheme.colorScheme.onPrimary),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+
+        // Product price
+        Text(
+            text = price,
+            fontSize = 14.sp,
+            color = (MaterialTheme.colorScheme.onPrimary),
+        )
+    }
+}
+

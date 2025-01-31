@@ -11,6 +11,8 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import com.example.compose.backgroundDark
+import com.example.compose.backgroundLight
 import com.example.compose.onPrimaryContainerDark
 import com.example.compose.onPrimaryContainerLight
 import com.example.compose.onPrimaryDark
@@ -41,12 +43,7 @@ private val lightScheme = lightColorScheme(
     secondaryContainer = secondaryContainerLight,
     tertiary = tertiaryLight,
    tertiaryContainer = tertiaryContainerLight,
-//    onTertiaryContainer = onTertiaryContainerLight,
-//    error = errorLight,
-//    onError = onErrorLight,
-//    errorContainer = errorContainerLight,
-//    onErrorContainer = onErrorContainerLight,
-//    background = backgroundLight,
+    background = backgroundLight,
 //    onBackground = onBackgroundLight,
 //    surface = surfaceLight,
 //    onSurface = onSurfaceLight,
@@ -77,12 +74,7 @@ private val darkScheme = darkColorScheme(
    secondaryContainer = secondaryContainerDark,
  tertiary = tertiaryDark,
    tertiaryContainer = tertiaryContainerDark,
-//    onTertiaryContainer = onTertiaryContainerDark,
-//    error = errorDark,
-//    onError = onErrorDark,
-//    errorContainer = errorContainerDark,
-//    onErrorContainer = onErrorContainerDark,
-//    background = backgroundDark,
+    background = backgroundDark,
 //    onBackground = onBackgroundDark,
 //    surface = surfaceDark,
 //    onSurface = onSurfaceDark,

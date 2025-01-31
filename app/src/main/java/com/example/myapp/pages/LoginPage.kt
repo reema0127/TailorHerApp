@@ -3,6 +3,7 @@ package com.example.myapp.pages
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -10,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -57,18 +59,19 @@ fun LoginPage(modifier: Modifier = Modifier, navController: NavController, authe
         }
     }
 
-    val CustomPink = Color(0xFFD0AAAB) // Custom pink color
+    val isDarkTheme = isSystemInDarkTheme()
+    val backgroundRes = if (isDarkTheme) R.drawable.loginbgdark else R.drawable.loginbg
 
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Background Image
         Image(
-            painter = painterResource(id = R.drawable.loginbg),
+            painter = painterResource(id = backgroundRes),
             contentDescription = "Login Background Image",
-            modifier = Modifier.fillMaxSize(), // Ensures the image takes up the full screen
-            contentScale = ContentScale.Crop // Ensures the image crops to fill the screen while maintaining its aspect ratio
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
         )
+
 
         // Foreground Login Form
         Column(
@@ -84,7 +87,7 @@ fun LoginPage(modifier: Modifier = Modifier, navController: NavController, authe
                     .height(600.dp),
                 shape = RoundedCornerShape(24.dp), // Larger rounded corners
                 colors = CardDefaults.cardColors(
-                    containerColor = CustomPink.copy(alpha = 0.6f) // Custom pink with transparency
+                    containerColor = MaterialTheme.colorScheme.background.copy(alpha = 0.8f)
                 ),
                 elevation = CardDefaults.cardElevation(0.dp) // No border or shadow
             ) {

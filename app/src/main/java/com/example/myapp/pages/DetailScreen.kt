@@ -25,16 +25,18 @@ import androidx.navigation.NavController
 import com.example.myapp.DataSource
 import com.example.myapp.R
 
+
 @Composable
 fun DetailScreen(modifier: Modifier = Modifier, itemId: String, navController: NavController) {
     val item = DataSource().loadIvoryDrops().find { it.id == itemId }
+    var quantity by remember { mutableStateOf(1) }
 
     item?.let {
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.primary)
         ) {
             Box(modifier = Modifier.fillMaxWidth()) {
                 Image(
@@ -52,14 +54,26 @@ fun DetailScreen(modifier: Modifier = Modifier, itemId: String, navController: N
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
                     }
                     Row {
                         IconButton(onClick = { /* Handle search */ }) {
-                            Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = "Search",
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
                         }
                         IconButton(onClick = { /* Handle share */ }) {
-                            Icon(imageVector = Icons.Default.Share, contentDescription = "Share")
+                            Icon(
+                                imageVector = Icons.Default.Share,
+                                contentDescription = "Share",
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
                         }
                     }
                 }
@@ -72,100 +86,143 @@ fun DetailScreen(modifier: Modifier = Modifier, itemId: String, navController: N
                     text = stringResource(id = item.titleResourceId),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF947B7A)
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 Text(
                     text = stringResource(id = item.priceResourceId),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF947B7A)
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 Text(
                     text = "Availability: ${item.stockLevel}",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Color(0xFF947B7A),
+                    color = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.padding(top = 8.dp),
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Size buttons (Two lines, wrapped content)
                 Text(
                     text = "Select Size:",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF947B7A),
+                    color = (MaterialTheme.colorScheme.onPrimary),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
-                Column(
+                Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp) // Space between rows
+                    horizontalArrangement = Arrangement.spacedBy(3.dp)
                 ) {
-                    // First row of buttons
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly // Space buttons evenly
+                    Button(
+                        onClick = { /* Handle Small Size */ },
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+                        shape = RoundedCornerShape(50),
+                        modifier = Modifier.padding(horizontal = 2.dp)
                     ) {
-                        Button(
-                            onClick = { /* Handle Small Size */ },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF8C9D5)),
-                            shape = RoundedCornerShape(50),
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(50.dp)
-                                .padding(horizontal = 4.dp)
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.padding(vertical = 4.dp)
                         ) {
-                            Text("Small", fontSize = 18.sp, color = Color.White)
-                        }
-
-                        Button(
-                            onClick = { /* Handle Medium Size */ },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF8C9D5)),
-                            shape = RoundedCornerShape(50),
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(50.dp)
-                                .padding(horizontal = 4.dp)
-                        ) {
-                            Text("Medium", fontSize = 18.sp, color = Color.White)
+                            Text("Small", fontSize = 12.sp, color = (MaterialTheme.colorScheme.onPrimary))
                         }
                     }
 
-                    // Second row of buttons
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly // Space buttons evenly
+                    Button(
+                        onClick = { /* Handle Medium Size */ },
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+                        shape = RoundedCornerShape(50),
+                        modifier = Modifier.padding(horizontal = 4.dp)
                     ) {
-                        Button(
-                            onClick = { /* Handle Large Size */ },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF8C9D5)),
-                            shape = RoundedCornerShape(50),
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(50.dp)
-                                .padding(horizontal = 4.dp)
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.padding(vertical = 4.dp)
                         ) {
-                            Text("Large", fontSize = 18.sp, color = Color.White)
+                            Text("Medium", fontSize = 12.sp, color = (MaterialTheme.colorScheme.onPrimary))
                         }
+                    }
 
-                        Button(
-                            onClick = { /* Handle Custom Size */ },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF8C9D5)),
-                            shape = RoundedCornerShape(50),
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(50.dp)
-                                .padding(horizontal = 4.dp)
+                    Button(
+                        onClick = { /* Handle Large Size */ },
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+                        shape = RoundedCornerShape(50),
+                        modifier = Modifier.padding(horizontal = 2.dp)
+                    ) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.padding(vertical = 4.dp)
                         ) {
-                            Text("Custom", fontSize = 18.sp, color = Color.White)
+                            Text("Large", fontSize = 12.sp, color = (MaterialTheme.colorScheme.onPrimary))
+                        }
+                    }
+
+                    Button(
+                        onClick = { /* Handle Custom Size */ },
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+                        shape = RoundedCornerShape(50),
+                        modifier = Modifier.padding(horizontal = 4.dp)
+                    ) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.padding(vertical = 6.dp)
+                        ) {
+                            Text("Custom", fontSize = 12.sp, color = (MaterialTheme.colorScheme.onPrimary))
                         }
                     }
                 }
 
+                Spacer(modifier = Modifier.height(25.dp))
 
-                Spacer(modifier = Modifier.height(16.dp))
+                // Quantity Selector
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp), // Add space between the elements
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Quantity",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.padding(end = 16.dp) // Space between text and buttons
+                    )
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        TextButton(
+                            onClick = { if (quantity > 1) quantity-- },
+                            modifier = Modifier.size(36.dp),
+                            enabled = quantity > 1 // Disable if quantity is 1
+                        ) {
+                            Text(
+                                text = "-",
+                                fontSize = 24.sp,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
+                        Text(
+                            text = "$quantity",
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                        TextButton(
+                            onClick = { quantity++ },
+                            modifier = Modifier.size(36.dp)
+                        ) {
+                            Text(
+                                text = "+",
+                                fontSize = 24.sp,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(25.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -173,23 +230,23 @@ fun DetailScreen(modifier: Modifier = Modifier, itemId: String, navController: N
                 ) {
                     Button(
                         onClick = { /* Handle buy now */ },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF8C9D5)),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = 8.dp)
-                            .height(50.dp)
+                            .height(48.dp)
                     ) {
-                        Text("Buy now", fontSize = 20.sp)
+                        Text("Buy now", fontSize = 16.sp, color = MaterialTheme.colorScheme.onPrimary)
                     }
 
                     Button(
                         onClick = { /* Handle add to cart */ },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF8C9D5)),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
                         modifier = Modifier
                             .weight(1f)
-                            .height(50.dp)
+                            .height(48.dp)
                     ) {
-                        Text("Add to cart", fontSize = 20.sp)
+                        Text("Add to cart", fontSize = 16.sp, color = MaterialTheme.colorScheme.onPrimary)
                     }
                 }
             }
