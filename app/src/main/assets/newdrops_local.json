@@ -1,0 +1,50 @@
+[
+  {
+    "id": "1",
+    "imageName": "white_1",
+    "title": "Frosted Charm",
+    "price": "₦4500",
+    "description": "A beautiful frosted charm dress with intricate lace details.",
+    "stockLevel": "10 remaining"
+  },
+  {
+    "id": "2",
+    "imageName": "white_2",
+    "title": "Moonlit Gown",
+    "price": "₦6500",
+    "description": "A stunning moonlit gown with a delicate silk fabric.",
+    "stockLevel": "100"
+  },
+  {
+    "id": "3",
+    "imageName": "white_3",
+    "title": "Luna Glow",
+    "price": "₦4000",
+    "description": "A glowing luna dress perfect for evening parties.",
+    "stockLevel": "25"
+  },
+  {
+    "id": "4",
+    "imageName": "white_4",
+    "title": "Celestial Whisper",
+    "price": "₦6500",
+    "description": "A beautiful moonlit gown with a flowing train.",
+    "stockLevel": "Almost Out of stock"
+  },
+  {
+    "id": "5",
+    "imageName": "white_5",
+    "title": "Ethereal Bloom",
+    "price": "₦4000",
+    "description": "A chic and elegant luna glow dress with a delicate back design.",
+    "stockLevel": "100"
+  },
+  {
+    "id": "6",
+    "imageName": "white_6",
+    "title": "Starlit Grace",
+    "price": "₦4000",
+    "description": "A chic and elegant luna glow dress with a delicate back design.",
+    "stockLevel": "100"
+  }
+]

@@ -17,10 +17,10 @@ class AutheticationViewModel : ViewModel() {
         _authState.value = AuthState.Unauthenticated
     }
 
-    fun checkAuthStatus() {
-        // Force user to login even if Firebase has a current user
-        _authState.value = AuthState.Unauthenticated
-    }
+//    fun checkAuthStatus() {
+//        // Force user to login even if Firebase has a current user
+//        _authState.value = AuthState.Unauthenticated
+//    }
 
     fun login(email: String, password: String) {
         if (email.isEmpty() || password.isEmpty()) {

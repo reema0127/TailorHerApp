@@ -34,7 +34,7 @@ class DataSource {
             NewDrop(
                 id = "4",
                 imageResourceId = R.drawable.white_4,
-                titleResourceId = R.string.moonlit_gown,
+                titleResourceId = R.string.Celestial_whisper,
                 priceResourceId = R.string.price_6500,
                 description = "A beautiful moonlit gown with a flowing train.",
                 stockLevel = "Almost Out of stock"
@@ -42,7 +42,15 @@ class DataSource {
             NewDrop(
                 id = "5",
                 imageResourceId = R.drawable.white_5,
-                titleResourceId = R.string.luna_glow,
+                titleResourceId = R.string.Ethereal_bloom,
+                priceResourceId = R.string.price_4000,
+                description = "A chic and elegant luna glow dress with a delicate back design.",
+                stockLevel = "100"
+            ),
+            NewDrop(
+                id = "6",
+                imageResourceId = R.drawable.white_6,
+                titleResourceId = R.string.Starlit_grace,
                 priceResourceId = R.string.price_4000,
                 description = "A chic and elegant luna glow dress with a delicate back design.",
                 stockLevel = "100"

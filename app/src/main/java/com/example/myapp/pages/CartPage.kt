@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -21,12 +23,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.myapp.DataClases.CartItems
 import com.example.myapp.R
 
 @Composable
-fun CartPageUI(modifier: Modifier = Modifier) {
+fun CartPageUI(modifier: Modifier = Modifier,navController: NavController) {
     var selectedItems by remember { mutableStateOf(listOf<CartItems>()) }
+    var quantities by remember { mutableStateOf<Map<CartItems, Int>>(emptyMap()) }
+
     val cartItems = listOf(
         CartItems(
             imageRes = R.drawable.cart1,
@@ -44,8 +49,8 @@ fun CartPageUI(modifier: Modifier = Modifier) {
         ),
         CartItems(
             imageRes = R.drawable.cart3,
-            title = "Elegant Dress",
-            description = "An elegant evening dress with a sleek design and flowing silhouette.",
+            title = "Floral Dress",
+            description = "A coset inspired dress with a lace-up detail and off-shoulder sleeves.",
             size = "Size / M",
             price = "LKR 5500"
         )
@@ -56,29 +61,35 @@ fun CartPageUI(modifier: Modifier = Modifier) {
             .fillMaxSize()
             .padding(bottom = 80.dp) // Add space to accommodate the CartFooter
     ) {
-        TopBarCart()
 
-        // Scrollable content for the cart items
         Box(
             modifier = Modifier
-                .weight(1f) // Take the remaining space above the footer
-                .verticalScroll(rememberScrollState()) // Allow scrolling for items
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
                 .background(MaterialTheme.colorScheme.primary)
         ) {
-            CartItems(
-                items = cartItems,
-                selectedItems = selectedItems,
-                onItemSelected = { selectedItems = it }
-            )
+
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TopBar(navController)
+
+                CartItems(
+                    items = cartItems,
+                    selectedItems = selectedItems,
+                    quantities = quantities,
+                    onItemSelected = { updatedItems -> selectedItems = updatedItems },
+                    onQuantityChange = { item, quantity -> quantities = quantities.toMutableMap().apply { put(item, quantity) } }
+                )
+            }
         }
 
         // Fixed Cart Footer at the bottom
         CartFooter(
             cartItems = cartItems,
             selectedItems = selectedItems,
-            onSelectAll = { selectAll ->
-                selectedItems = if (selectAll) cartItems else emptyList()
-            },
+            quantities = quantities,
+            onSelectAll = { selectAll -> selectedItems = if (selectAll) cartItems else emptyList() },
             onCheckout = { /* Handle checkout */ }
         )
     }
@@ -154,11 +165,14 @@ fun TopBarCart() {
         }
     }
 }
+
 @Composable
 fun CartItems(
     items: List<CartItems>,
     selectedItems: List<CartItems>,
-    onItemSelected: (List<CartItems>) -> Unit
+    quantities: Map<CartItems, Int>,
+    onItemSelected: (List<CartItems>) -> Unit,
+    onQuantityChange: (CartItems, Int) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -167,102 +181,105 @@ fun CartItems(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items.forEach { item ->
-            CartItemCard(item, selectedItems.contains(item)) { isSelected ->
-                val updatedSelection = if (isSelected) {
-                    selectedItems + item
-                } else {
-                    selectedItems - item
+            CartItemCard(
+                item = item,
+                isChecked = selectedItems.contains(item),
+                quantity = quantities[item] ?: 1,
+                onCheckedChange = { isSelected ->
+                    val updatedSelection = if (isSelected) {
+                        selectedItems + item
+                    } else {
+                        selectedItems - item
+                    }
+                    onItemSelected(updatedSelection)
+                },
+                onQuantityChange = { quantity ->
+                    onQuantityChange(item, quantity)
                 }
-                onItemSelected(updatedSelection)
-            }
+            )
         }
     }
 }
-
 
 @Composable
 fun CartItemCard(
     item: CartItems,
     isChecked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
+    quantity: Int,
+    onCheckedChange: (Boolean) -> Unit,
+    onQuantityChange: (Int) -> Unit
 ) {
-    var quantity by remember { mutableStateOf(1) }
-
     // Calculate the total price based on quantity
     val totalPrice = item.price.replace("LKR ", "").replace(",", "").toInt() * quantity
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background( MaterialTheme.colorScheme.tertiary, RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.tertiary, RoundedCornerShape(12.dp))
             .padding(12.dp)
     ) {
-        Row(verticalAlignment = Alignment.Top,
+        Row(
+            verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.Start
         ) {
-
-            // Checkbox with reduced padding
+            // Checkbox to select the item
             Checkbox(
                 checked = isChecked,
                 onCheckedChange = onCheckedChange
-//                modifier = Modifier
-//                    .padding(end = 1.dp) // Adjust padding to reduce gap
             )
 
-            // Image next to the checkbox
+            // Image of the product
             Image(
                 painter = painterResource(id = item.imageRes),
                 contentDescription = "Product Image",
-                modifier = Modifier
-                    .size(160.dp) // Adjusted size for better layout
+                modifier = Modifier.size(160.dp)
             )
 
-            // Content on the right
+            // Content section (title, description, size, price)
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 4.dp),
-                verticalArrangement = Arrangement.SpaceBetween // Space out the content
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
                 // Top section with text
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(text = item.title, fontSize = 14.sp,     color = (MaterialTheme.colorScheme.onPrimaryContainer))
-                    Text(text = item.description, fontSize = 12.sp,     color = (MaterialTheme.colorScheme.onPrimaryContainer))
+                    Text(text = item.title, fontSize = 14.sp, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                    Text(text = item.description, fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimaryContainer)
                     Button(
                         onClick = { /* Handle size selection */ },
                         modifier = Modifier.padding(top = 4.dp),
                         contentPadding = PaddingValues(horizontal = 16.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
                     ) {
-                        Text(text = item.size, fontSize = 12.sp,color = (MaterialTheme.colorScheme.onPrimary))
+                        Text(text = item.size, fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimary)
                     }
-                    Text(text = "LKR ${String.format("%,d", totalPrice)}", fontSize = 14.sp, color = (MaterialTheme.colorScheme.onPrimary))
+                    Text(text = "LKR ${String.format("%,d", totalPrice)}", fontSize = 14.sp, color = MaterialTheme.colorScheme.onPrimary)
                 }
 
                 // Bottom section with quantity buttons
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.End, // Align to the end
+                    horizontalArrangement = Arrangement.End,
                     modifier = Modifier.padding(top = 8.dp)
                 ) {
                     TextButton(
-                        onClick = { if (quantity > 1) quantity-- },
+                        onClick = { if (quantity > 1) onQuantityChange(quantity - 1) },
                         modifier = Modifier.size(36.dp)
                     ) {
-                        Text(text = "-", fontSize = 24.sp, color = (MaterialTheme.colorScheme.onPrimary))
+                        Text(text = "-", fontSize = 24.sp, color = MaterialTheme.colorScheme.onPrimary)
                     }
                     Text(
                         text = "$quantity",
                         fontSize = 16.sp,
-                        color = (MaterialTheme.colorScheme.onPrimary),
+                        color = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
                     TextButton(
-                        onClick = { quantity++ },
-
+                        onClick = { onQuantityChange(quantity + 1) },
                         modifier = Modifier.size(36.dp)
                     ) {
-                        Text(text = "+", fontSize = 24.sp, color = (MaterialTheme.colorScheme.onPrimary))
+                        Text(text = "+", fontSize = 24.sp, color = MaterialTheme.colorScheme.onPrimary)
                     }
                 }
             }
@@ -270,17 +287,16 @@ fun CartItemCard(
     }
 }
 
-
-
 @Composable
 fun CartFooter(
     cartItems: List<CartItems>,
     selectedItems: List<CartItems>,
+    quantities: Map<CartItems, Int>,
     onSelectAll: (Boolean) -> Unit,
     onCheckout: () -> Unit
 ) {
     val isAllSelected = selectedItems.size == cartItems.size
-    val totalPrice = selectedItems.sumOf { it.price.replace("LKR ", "").replace(",", "").toInt() }
+    val totalPrice = selectedItems.sumOf { it.price.replace("LKR ", "").replace(",", "").toInt() * (quantities[it] ?: 1) }
 
     Row(
         modifier = Modifier
@@ -296,20 +312,18 @@ fun CartFooter(
                 onCheckedChange = { onSelectAll(it) },
                 modifier = Modifier.padding(end = 8.dp)
             )
-            Text(text = "All", fontSize = 16.sp,  color = (MaterialTheme.colorScheme.onPrimary))
+            Text(text = "All", fontSize = 16.sp, color = MaterialTheme.colorScheme.onPrimary)
         }
-        Text(text = "LKR ${String.format("%,d", totalPrice)}", fontSize = 16.sp,  color = (MaterialTheme.colorScheme.onPrimary))
-
+        Text(text = "LKR ${String.format("%,d", totalPrice)}", fontSize = 16.sp, color = MaterialTheme.colorScheme.onPrimary)
         Button(
-            onClick = { /* Handle size selection */ },
-            modifier = Modifier.padding(top = 4.dp),
+            onClick = onCheckout,
             contentPadding = PaddingValues(horizontal = 16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
         ) {
             Text(
                 text = "Checkout (${selectedItems.size})",
                 fontSize = 16.sp,
-                color = (MaterialTheme.colorScheme.onPrimary)
+                color = MaterialTheme.colorScheme.onPrimary
             )
         }
     }

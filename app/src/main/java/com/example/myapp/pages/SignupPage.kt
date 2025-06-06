@@ -44,18 +44,17 @@ fun SignUpPage(
     navController: NavController,
     autheticationViewModel: AutheticationViewModel
 ) {
-    var firstname by remember { mutableStateOf("") }
+    var firstname by remember { mutableStateOf("") } //ensures the UI updates when these values change.
     var lastname by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     val authState = autheticationViewModel.authState.observeAsState()
     val context = LocalContext.current
-    val CustomPink = Color(0xFFD0AAAB) // Custom pink color
 
     LaunchedEffect(authState.value) {
         when (authState.value) {
-            is AuthState.Authenticated -> navController.navigate("login")
+            is AuthState.Authenticated -> navController.navigate("home")
             is AuthState.Error -> Toast.makeText(
                 context,
                 (authState.value as AuthState.Error).message,
@@ -90,16 +89,16 @@ fun SignUpPage(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
                     .height(700.dp),
-                shape = RoundedCornerShape(24.dp), // Larger rounded corners
+                shape = RoundedCornerShape(24.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.background.copy(alpha = 0.8f)
                 ),
-                elevation = CardDefaults.cardElevation(0.dp) // No border or shadow
+                elevation = CardDefaults.cardElevation(0.dp)
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(24.dp), // Adjusted padding for the form
+                        .padding(24.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {

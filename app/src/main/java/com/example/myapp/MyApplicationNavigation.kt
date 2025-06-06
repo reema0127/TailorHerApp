@@ -6,24 +6,24 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.myapp.pages.DetailScreen
-import com.example.myapp.pages.HomePage
-import com.example.myapp.pages.LoginPage
-import com.example.myapp.pages.SignUpPage
+import com.example.myapp.pages.*
 
 @Composable
-fun MyAppNavigation(modifier: Modifier = Modifier,autheticationViewModel: AutheticationViewModel){
+fun MyAppNavigation(modifier: Modifier = Modifier, autheticationViewModel: AutheticationViewModel) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination ="Login", builder= {
-        composable("Login"){
-            LoginPage(modifier,navController,autheticationViewModel)
+    NavHost(
+        navController = navController,
+        startDestination = "Login"
+    ) {
+        composable("Login") {
+            LoginPage(modifier, navController, autheticationViewModel)
         }
-        composable("signup"){
-            SignUpPage(modifier,navController,autheticationViewModel)
+        composable("signup") {
+            SignUpPage(modifier, navController, autheticationViewModel)
         }
-        composable("home"){
-            HomePage(modifier,navController,autheticationViewModel)
+        composable("home") {
+            HomePage(modifier, navController, autheticationViewModel)
         }
         composable("detail/{itemId}") { backStackEntry ->
             val itemId = backStackEntry.arguments?.getString("itemId")
@@ -31,5 +31,23 @@ fun MyAppNavigation(modifier: Modifier = Modifier,autheticationViewModel: Authet
                 DetailScreen(modifier, itemId, navController)
             }
         }
-    })
+        // Add these new routes
+        composable("cart") {
+            CartPageUI(modifier,navController)
+        }
+        composable("collection") {
+            CollectionScreen(navController)
+        }
+        composable("account") {
+            UserDashboard(modifier, navController, autheticationViewModel)
+        }
+        composable("about_us") {
+            AboutUs(navController) // Assuming AboutUs is a composable function
+        }
+        composable("profile") {
+            ProfilePage(onDismiss = {
+                navController.popBackStack()
+            })
+        }
+    }
 }

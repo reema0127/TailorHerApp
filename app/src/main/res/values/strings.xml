@@ -1,13 +1,12 @@
 <resources>
-    <string name="app_name">MyApp</string>
-
+        <string name="app_name">MyApp</string>
         <string name="frosted_charm">Frosted Charm</string>
         <string name="moonlit_gown">Moonlit Gown</string>
         <string name="luna_glow">Luna Glow</string>
-
+        <string name="Celestial_whisper">Celestial Whisper</string>
+        <string name="Ethereal_bloom">Ethereal Bloom</string>
+        <string name="Starlit_grace">Starlit Grace</string>
         <string name="price_4500">LKR 4500</string>
         <string name="price_6500">LKR 6500</string>
         <string name="price_4000">LKR 4000</string>
-
-
 </resources>
