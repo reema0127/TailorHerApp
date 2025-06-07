@@ -34,9 +34,7 @@ fun MyAppNavigation(modifier: Modifier = Modifier, autheticationViewModel: Authe
         composable("cart") {
             CartPageUI(modifier,navController)
         }
-        composable("collection") {
-            CollectionScreen(navController)
-        }
+
         composable("account") {
             UserDashboard(modifier, navController, autheticationViewModel)
         }
@@ -49,6 +47,9 @@ fun MyAppNavigation(modifier: Modifier = Modifier, autheticationViewModel: Authe
         composable("search") {
             ClothingCollectionScreen(navController)
         }
+
+        composable("summer") { ProductGridPage() }
+        composable("winter") { WinterProductGridPage() }
 
         composable("profile") {
             ProfilePage(onDismiss = {

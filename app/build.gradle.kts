@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation(libs.androidx.recyclerview)
+    implementation(libs.play.services.location)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -73,6 +74,12 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation("io.coil-kt:coil-compose:2.2.2")
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.maps.android:maps-compose:2.11.4")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation ("org.osmdroid:osmdroid-android:6.1.16")
+    implementation ("io.coil-kt:coil-compose:2.4.0")
 
     // Retrofit & Networking
     implementation(libs.retrofit)

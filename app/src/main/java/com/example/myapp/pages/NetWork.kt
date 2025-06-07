@@ -41,7 +41,7 @@ fun NoInternetBanner() {
 }
 
 @Composable
-fun rememberNetworkConnectivity(): Boolean {
+fun rememberNetworkConnectivity1(): Boolean {
     val context = LocalContext.current
     val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
