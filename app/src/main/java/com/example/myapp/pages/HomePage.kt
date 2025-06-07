@@ -198,13 +198,12 @@
         when (selectedIndex) {
             0 -> FashionStoreUI(navController)
             1 -> CartPageUI(modifier,navController)
-            2 -> CollectionScreen(navController)
+            2 -> ClothingCollectionScreen(navController)
             3 -> UserDashboard(modifier,navController, autheticationViewModel)
         }
     }
 
-
-    @Composable
+@Composable
     fun FashionStoreUI(navController: NavController) {
         Column(
             modifier = Modifier

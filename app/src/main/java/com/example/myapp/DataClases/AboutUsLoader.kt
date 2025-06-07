@@ -24,7 +24,7 @@ interface AboutUsService {
     suspend fun getAboutUs(): AboutUs
 }
 
-fun provideRetrofit(): Retrofit {
+fun provideRetrofitJSON(): Retrofit {
     return Retrofit.Builder()
         .baseUrl("https://raw.githubusercontent.com/reema0127/Tailor_Her_App/refs/heads/main/")
         .addConverterFactory(GsonConverterFactory.create())
@@ -32,7 +32,7 @@ fun provideRetrofit(): Retrofit {
 }
 
 suspend fun loadAboutUsFromNetwork(): AboutUs {
-    val retrofit = provideRetrofit()
+    val retrofit = provideRetrofitJSON()
     val service = retrofit.create(AboutUsService::class.java)
     return service.getAboutUs()
 }

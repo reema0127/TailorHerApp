@@ -1,7 +1,6 @@
 package com.example.myapp
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -44,10 +43,18 @@ fun MyAppNavigation(modifier: Modifier = Modifier, autheticationViewModel: Authe
         composable("about_us") {
             AboutUs(navController) // Assuming AboutUs is a composable function
         }
+//        composable("CoffeeScreen") {
+//            SearchPage(navController) // Assuming AboutUs is a composable function
+//        }
+        composable("search") {
+            ClothingCollectionScreen(navController)
+        }
+
         composable("profile") {
             ProfilePage(onDismiss = {
                 navController.popBackStack()
-            })
+            }
+            )
         }
     }
 }
